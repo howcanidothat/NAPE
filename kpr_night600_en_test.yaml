@@ -1,0 +1,43 @@
+data:
+  root: "."
+  sources: ["night600_en"]
+  targets: ["night600_en"]
+  height: 256
+  width: 128
+  norm_mean: [0.485, 0.456, 0.406]
+  norm_std: [0.229, 0.224, 0.225]
+  workers: 0
+
+  query_limit: 150
+  gallery_limit: 500
+  keep_qg_ratio: true
+
+model:
+  load_weights: "pretrained_models/kpr_occ_reid_SOLIDER_82.56_84.80_41898366.pth.tar"
+  load_config: false
+  pretrained: false
+  discard_test_params: true
+  kpr:
+    backbone: "solider_swin_base_patch4_window7_224"
+    test_embeddings: ["bn_globl", "parts"]
+
+  transreid:
+    cam_num: 3
+    sie_camera: false
+
+  solider:
+    semantic_weight: 0.2
+
+train:
+  mixed_precision: false
+
+test:
+  evaluate: true
+  batch_size: 6  
+  batch_size_pairwise_dist_matrix: 20
+  dist_metric: "cosine"
+  normalize_feature: true
+  rerank: false  # 禁用rerank减少内存使用
+  ranks: [1, 5, 10, 20]
+  part_based:
+    dist_combine_strat: "mean"
